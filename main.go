@@ -362,18 +362,6 @@ func main() {
 				}
 
 				if !user.Restricted && account.Requirements.DisabledReason != "" {
-					bytes, err := json.MarshalIndent(account.Requirements, "", "  ")
-
-					if err != nil {
-						fmt.Println(err)
-
-						http.Error(w, "There was an error retreiving your account information.", http.StatusInternalServerError)
-
-						return
-					}
-
-					fmt.Println(string(bytes))
-
 					err = db.Update(user.UserId, base.Updates{
 						"restricted": true,
 					})
@@ -394,18 +382,6 @@ func main() {
 				}
 
 				if user.Restricted && account.Requirements.DisabledReason == "" {
-					bytes, err := json.MarshalIndent(account.Requirements, "", "  ")
-
-					if err != nil {
-						fmt.Println(err)
-
-						http.Error(w, "There was an error retreiving your account information.", http.StatusInternalServerError)
-
-						return
-					}
-
-					fmt.Println(string(bytes))
-
 					err = db.Update(user.UserId, base.Updates{
 						"restricted": false,
 					})
