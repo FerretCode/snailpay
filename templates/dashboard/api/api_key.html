@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Snail - Payment Integrations</title>
+    <link rel="icon" href="./favicon.ico" type="image/x-icon" />
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/daisyui@3.2.1/dist/full.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto+Condensed&family=Victor+Mono&display=swap"
+      rel="stylesheet"
+    />
+
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body style="font-family: 'Roboto Condensed'">
+    <div
+      class="navbar text-primary-content"
+      style="
+        background: rgb(242, 221, 110);
+        background: linear-gradient(
+          90deg,
+          rgba(242, 221, 110, 1) 0%,
+          rgba(229, 178, 93, 1) 35%,
+          rgba(82, 58, 52, 1) 100%
+        );
+      "
+    >
+      <div class="flex-1">
+        <a class="btn btn-ghost normal-case text-xl" href="/">Home</a>
+      </div>
+      <div class="flex-none">
+        <ul class="menu menu-horizontal px-1">
+          <li><a href="/dashboard/home" class="font-bold">Dashboard</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <button
+      style="background-color: #f2dd6e; color: white"
+      id="stripe-payments"
+      class="btn mt-5 ml-5"
+    >
+      <a href="/dashboard/home"> Back to Dashboard</a>
+    </button>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const generateButton = document.getElementById("generate-button");
+        const deleteButton = document.getElementById("delete-button");
+
+        const keyName = document.getElementById("key-name");
+        const deleteKeyName = document.getElementById("delete-key-name");
+
+        deleteButton.addEventListener("click", async (e) => {
+          e.preventDefault();
+
+          deleteButton.setAttribute("disabled", "disabled");
+
+          const res = await fetch("/api/delete-api-key", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              name: deleteKeyName.value,
+            }),
+          });
+
+          if (res.status !== 200)
+            return alert("There was an issue deleting your API key!");
+
+          location.reload();
+        });
+
+        generateButton.addEventListener("click", async (e) => {
+          e.preventDefault();
+
+          generateButton.setAttribute("disabled", "disabled");
+
+          const key = window.crypto.randomUUID();
+
+          const res = await fetch("/api/new-api-key", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              name: keyName.value,
+              key,
+            }),
+          });
+
+          if (res.status !== 200)
+            return alert("There was an issue generating your API key!");
+
+          const newKeyAlert = document.createElement("div");
+
+          newKeyAlert.innerHTML = `<div class="alert alert-success">
+      		<svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+      		<span>Your API key has been generated. Copy it now, you won't be seeing it again: snail_${key}</span>
+      </div>`;
+
+          document.getElementById("new-key-container").appendChild(newKeyAlert);
+        });
+      });
+    </script>
+
+    <div class="flex">
+      <div class="m-auto">
+        <div id="new-key-container" class="flex"></div>
+        <div class="flex">
+          <div class="m-auto">
+            <div class="mt-5">
+              <button
+                style="color: white; background-color: #f2dd6e"
+                class="btn"
+                onclick="new_api_key.showModal()"
+              >
+                Generate API Key
+              </button>
+              <dialog
+                id="new_api_key"
+                class="modal modal-bottom sm:modal-middle"
+              >
+                <form method="dialog" class="modal-box">
+                  <h3 class="font-bold text-lg">New API Key</h3>
+                  <p class="py-4">Create a name for your new API Key</p>
+                  <div class="flex">
+                    <div class="m-auto">
+                      <input
+                        id="key-name"
+                        type="text"
+                        placeholder="The name of your API key"
+                        class="mb-5 input input-bordered input-lg w-full max-w-xs"
+                      />
+                    </div>
+                  </div>
+                  <div class="modal-action">
+                    <button class="btn btn-error">Cancel</button>
+                    <button
+                      id="generate-button"
+                      class="btn text-white bg-green-500"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke-width="1.5"
+                        stroke="currentColor"
+                        class="w-6 h-6"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          d="M6.75 7.5l3 2.25-3 2.25m4.5 0h3m-9 8.25h13.5A2.25 2.25 0 0021 18V6a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 6v12a2.25 2.25 0 002.25 2.25z"
+                        />
+                      </svg>
+                      Generate
+                    </button>
+                  </div>
+                </form>
+              </dialog>
+
+              <button
+                class="btn btn-error"
+                onclick="delete_api_key.showModal()"
+              >
+                Delete API Key
+              </button>
+              <dialog
+                id="delete_api_key"
+                class="modal modal-bottom sm:modal-middle"
+              >
+                <form method="dialog" class="modal-box">
+                  <h3 class="font-bold text-lg">Delete API Key</h3>
+                  <p class="py-4"></p>
+                  <div class="flex">
+                    <div class="m-auto">
+                      <select
+                        id="delete-key-name"
+                        class="select select-bordered w-full max-w-xs"
+                      >
+                        <option disabled selected>API Key Name</option>
+                        {{range .APIKeyNames}}
+                        <option>{{.}}</option>
+                        {{end}}
+                      </select>
+                    </div>
+                  </div>
+                  <div class="modal-action">
+                    <button class="btn btn-error">Cancel</button>
+                    <button id="delete-button" class="btn text-white btn-error">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke-width="1.5"
+                        stroke="currentColor"
+                        class="w-6 h-6"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          d="M6.75 7.5l3 2.25-3 2.25m4.5 0h3m-9 8.25h13.5A2.25 2.25 0 0021 18V6a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 6v12a2.25 2.25 0 002.25 2.25z"
+                        />
+                      </svg>
+                      Delete
+                    </button>
+                  </div>
+                </form>
+              </dialog>
+            </div>
+          </div>
+        </div>
+        <div class="overflow-x-auto mt-6">
+          <h1 class="text-white font-bold text-2xl">Your API Keys:</h1>
+          <ul>
+            {{range .APIKeyNames}}
+            <li>
+              -
+              <div class="badge badge-accent">{{.}}</div>
+            </li>
+            {{end}}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

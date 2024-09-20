@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Snail - Payment Integrations</title>
+    <link rel="icon" href="./favicon.ico" type="image/x-icon" />
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/daisyui@3.2.1/dist/full.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto+Condensed&family=Victor+Mono&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body style="font-family: 'Roboto Condensed'">
+    <div
+      class="navbar text-primary-content"
+      style="
+        background: rgb(242, 221, 110);
+        background: linear-gradient(
+          90deg,
+          rgba(242, 221, 110, 1) 0%,
+          rgba(229, 178, 93, 1) 35%,
+          rgba(82, 58, 52, 1) 100%
+        );
+      "
+    >
+      <div class="flex-1">
+        <a class="btn btn-ghost normal-case text-xl" href="/">Home</a>
+      </div>
+      <div class="flex-none">
+        <ul class="menu menu-horizontal px-1">
+          <li><a href="/dashboard/home" class="font-bold">Dashboard</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        function getBase64(file) {
+          return new Promise((resolve) => {
+            let reader = new FileReader();
+            reader.readAsDataURL(file);
+
+            reader.onload = function () {
+              resolve(reader.result);
+            };
+
+            reader.onerror = function (error) {
+              console.log("Error: ", error);
+            };
+          });
+        }
+
+        const submitButton = document.getElementById("submit-button");
+
+        submitButton.addEventListener("click", async (e) => {
+          e.preventDefault();
+
+          submitButton.setAttribute("disabled", "disabled");
+
+          const image = document.getElementById("product-image");
+
+          if (image.files[0].type !== "image/jpeg")
+            return alert("Please make sure your image is a JPEG file!");
+
+          const name = document.getElementById("product-name").value;
+          const price = document.getElementById("product-price").value;
+
+          let base64 = await getBase64(image.files[0]);
+
+          base64 = base64.split(";base64,").pop();
+
+          console.log(base64);
+
+          const res = await fetch("/api/subscription-link", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              image: base64,
+              name,
+              price: parseInt(price),
+            }),
+          });
+
+          if (res.status !== 200 && res.status !== 400)
+            return alert("There was an issue creating your payment link!");
+
+          if (res.status === 400)
+            return alert(
+              "There was an issue creating your payment link! Please make sure your image has a 1:1 aspect ratio."
+            );
+
+          window.location.href = "/dashboard/subscription-link-list";
+        });
+      });
+    </script>
+
+    <button
+      style="background-color: #f2dd6e; color: white"
+      id="stripe-payments"
+      class="btn mt-5 ml-5"
+    >
+      <a href="/dashboard/home"> Back to Dashboard</a>
+    </button>
+
+    <div class="flex min-h-screen">
+      <div class="m-auto">
+        <ul class="steps steps-lg steps-vertical mt-6">
+          <li class="step">
+            <div class="card w-96 bg-base-100 shadow-xl">
+              <div class="ml-5 mt-5 avatar placeholder">
+                <div
+                  class="bg-neutral-focus text-neutral-content rounded-full w-24"
+                >
+                  <span class="text-3xl">Icon</span>
+                </div>
+              </div>
+
+              <div class="card-body">
+                <input
+                  id="product-image"
+                  type="file"
+                  multiple="false"
+                  class="mb-5 file-input file-input-bordered w-full max-w-xs"
+                />
+                <h2 class="card-title">Image</h2>
+                <p>Choose an image to represent your product</p>
+              </div>
+            </div>
+          </li>
+          <li class="step">
+            <div class="card w-96 bg-base-100 shadow-xl">
+              <h1 class="mx-5 mt-5 text-3xl">Name</h1>
+              <div class="card-body">
+                <input
+                  id="product-name"
+                  type="text"
+                  placeholder="Your Product's Name"
+                  class="mb-5 input input-bordered input-lg w-full max-w-xs"
+                />
+                <h2 class="card-title">Name</h2>
+                <p>Enter your product's name</p>
+              </div>
+            </div>
+          </li>
+          <li class="step">
+            <div class="flex justify-center mt-5">
+              <div class="card w-96 bg-base-100 shadow-xl">
+                <h1 class="mx-5 mt-5 text-3xl">Price</h1>
+                <div class="card-body">
+                  <input
+                    id="product-price"
+                    type="number"
+                    placeholder="Your Product's Monthly Price"
+                    class="mb-5 input input-bordered input-lg w-full max-w-xs"
+                  />
+                  <h2 class="card-title">Price</h2>
+                  <p>Choose the monthly price (in USD) for your product</p>
+                </div>
+              </div>
+            </div>
+          </li>
+          <li class="step">
+            <button
+              id="submit-button"
+              style="background-color: #f2dd6e; color: white"
+              class="btn"
+            >
+              Create Subscription URL
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Snail - Payment Integrations</title>
+    <link rel="icon" href="./favicon.ico" type="image/x-icon" />
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/daisyui@3.2.1/dist/full.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto+Condensed&family=Victor+Mono&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body style="font-family: 'Roboto Condensed'">
+    <div
+      class="navbar text-primary-content"
+      style="
+        background: rgb(242, 221, 110);
+        background: linear-gradient(
+          90deg,
+          rgba(242, 221, 110, 1) 0%,
+          rgba(229, 178, 93, 1) 35%,
+          rgba(82, 58, 52, 1) 100%
+        );
+      "
+    >
+      <div class="flex-1">
+        <a class="btn btn-ghost normal-case text-xl" href="/">Home</a>
+      </div>
+      <div class="flex-none">
+        <ul class="menu menu-horizontal px-1">
+          <li><a href="/dashboard/home" class="font-bold">Dashboard</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <button
+      style="background-color: #f2dd6e; color: white"
+      id="stripe-payments"
+      class="btn mt-5 ml-5"
+    >
+      <a href="/dashboard/home"> Back to Dashboard</a>
+    </button>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const payoutButton = document.getElementById("payout-button");
+        const payoutAmount = parseInt(
+          document.getElementById("payout-amount").value
+        );
+
+        payoutButton.addEventListener("click", async (e) => {
+          e.preventDefault();
+
+          if (isNaN(payoutAmount)) return alert("Please input a valid number!");
+
+          payoutButton.setAttribute("disabled", "disabled");
+
+          const res = await fetch("/api/new-payout", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              amount: payoutAmount,
+            }),
+          });
+
+          if (res.status !== 200)
+            return alert("There was an issue initializing your payout!");
+
+          location.reload();
+        });
+      });
+    </script>
+
+    <div class="flex">
+      <div class="m-auto">
+        <div class="flex flex-col w-full lg:flex-row">
+          <div class="card w-96 bg-neutral-700 shadow-xl text-white">
+            <figure
+              class="px-10 pt-10 rounded-b-lg bg-gradient-to-r from-orange-300 to-yellow-600"
+            ></figure>
+            <div class="card-body items-center text-center">
+              <h2 class="card-title font-bold">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="w-6 h-6"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z"
+                  />
+                </svg>
+                Balance
+              </h2>
+              <p>Your balance that you can pay out to your bank</p>
+              <div class="card-actions">
+                <div class="badge badge-accent badge-outline">
+                  Balance: ${{.Balance}}
+                </div>
+                <div class="badge badge-error badge-outline">
+                  Pending: ${{.Pending}}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="divider lg:divider-horizontal mx-5"></div>
+          <div class="card w-96 bg-neutral-700 shadow-xl text-white">
+            <figure
+              class="px-10 pt-10 rounded-b-lg bg-gradient-to-r from-orange-300 to-yellow-600"
+            ></figure>
+            <div class="card-body items-center text-center">
+              <h2 class="card-title font-bold">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="w-6 h-6"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M6.75 7.5l3 2.25-3 2.25m4.5 0h3m-9 8.25h13.5A2.25 2.25 0 0021 18V6a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 6v12a2.25 2.25 0 002.25 2.25z"
+                  />
+                </svg>
+                Withdrawn
+              </h2>
+              <p>The money you have already withdrawn to your bank</p>
+              <div class="card-actions">
+                <div class="badge badge-accent badge-outline">
+                  Withdrawn: ${{.Withdrawn}}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="flex">
+          <div class="m-auto">
+            <div class="mt-5">
+              <button
+                style="color: white; background-color: #f2dd6e"
+                class="btn"
+                onclick="payout_modal.showModal()"
+              >
+                Payout
+              </button>
+              <dialog
+                id="payout_modal"
+                class="modal modal-bottom sm:modal-middle"
+              >
+                <form method="dialog" class="modal-box">
+                  <h3 class="font-bold text-lg">Payout</h3>
+                  <p class="py-4">
+                    Enter the amount of USD to be transfered to your bank
+                  </p>
+                  <div class="flex">
+                    <div class="m-auto">
+                      <input
+                        id="payout-amount"
+                        type="text"
+                        placeholder="USD To Payout"
+                        class="mb-5 input input-bordered input-lg w-full max-w-xs"
+                      />
+                    </div>
+                  </div>
+                  <div class="modal-action">
+                    <button class="btn btn-error">Cancel</button>
+                    <button
+                      id="payout-button"
+                      class="btn text-white bg-green-500"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke-width="1.5"
+                        stroke="currentColor"
+                        class="w-6 h-6"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z"
+                        />
+                      </svg>
+                      Payout
+                    </button>
+                  </div>
+                </form>
+              </dialog>
+            </div>
+          </div>
+        </div>
+        <div class="overflow-x-auto mt-6 border-4 border-amber-400">
+          <table class="table">
+            <!-- head -->
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Amount</th>
+                <th>Arrival Date</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {{range .PayoutList}}
+              <tr>
+                <td>
+                  <div class="flex items-center space-x-3">
+                    <div class="font-bold">{{.Created}}</div>
+                  </div>
+                </td>
+                <td>{{.Amount}}</td>
+                <td>{{.ArrivalDate}}</td>
+                <td>{{.Status}}</td>
+              </tr>
+              {{end}}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

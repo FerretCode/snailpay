@@ -1,0 +1,321 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Snail - Payment Integrations</title>
+    <link rel="icon" href="./favicon.ico" type="image/x-icon" />
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/daisyui@3.2.1/dist/full.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto+Condensed&family=Victor+Mono&display=swap"
+      rel="stylesheet"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/default.min.css"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+
+    <meta content="Snail" property="og:title" />
+    <meta
+      content="Easily create payment integrations for your apps"
+      property="og:description"
+    />
+    <meta content="https://snailpay.app" property="og:url" />
+    <meta content="/static/images/Logo.png" property="og:image" />
+    <meta content="#f2dd6e" data-react-helmet="true" name="theme-color" />
+
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body style="font-family: &quot;Roboto Condensed&quot;">
+    <script>
+      hljs.highlightAll();
+    </script>
+
+    <style>
+      .hljs {
+        background: #2a323c;
+      }
+
+      .hljs {
+        color: #b9a983;
+      }
+
+      .hljs-string {
+        color: #dd0909;
+      }
+
+      .hljs-title {
+        color: #dd0909;
+      }
+    </style>
+
+    <div
+      class="navbar text-primary-content"
+      style="
+        border-color: rgb(242, 221, 110);
+        border-image-slice: 1;
+        border-image-source: linear-gradient(
+          90deg,
+          rgba(242, 221, 110, 1) 0%,
+          rgba(229, 178, 93, 1) 35%,
+          rgba(171, 143, 69, 1) 100%
+        );
+      "
+    >
+      <div class="flex-1">
+        <a class="btn btn-ghost normal-case text-xl" href="/">Home</a>
+      </div>
+      <div class="flex-none">
+        <ul class="menu menu-horizontal px-1">
+          <li><a href="https://discord.gg/TDjzAA5Wpp">Discord</a></li>
+          <li>
+            <a href="https://npmjs.com/package/snail-api-wrapper"
+              >Node.js SDK</a
+            >
+          </li>
+          <li>
+            <a href="https://github.com/ferretcode/snail-go-sdk">Golang SDK</a>
+          </li>
+          <li><a href="/dashboard/home" class="font-bold">Dashboard</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="flex">
+      <div class="m-auto">
+        <div class="hero min-h-min bg-base-200 mt-6">
+          <div
+            style="
+              border-color: rgb(242, 221, 110);
+              border-image-slice: 1;
+              border-image-source: linear-gradient(
+                90deg,
+                rgba(242, 221, 110, 1) 0%,
+                rgba(229, 178, 93, 1) 35%,
+                rgba(171, 143, 69, 1) 100%
+              );
+            "
+            class="hero-content flex-col lg:flex-row-reverse lg:scale-100 sm:scale-75 border-8 shadow-xl shadow-neutral-600"
+          >
+            <img
+              src="/static/images/Logo.svg"
+              class="object-contain md:max-w-3xl rounded-lg"
+              alt="Hero Image"
+            />
+            <div class="text-primary-content text-center">
+              <h1 class="text-5xl font-bold">Payment Integrations Made Easy</h1>
+              <p class="py-6">
+                Easily create payment integrations for your bots. Verify
+                purchases, manage subscriptions, and monetize your apps.
+              </p>
+              <button
+                style="background-color: #f2dd6e; color: white"
+                class="btn"
+              >
+                <a href="/dashboard/home">Get Started</a>
+              </button>
+              <button
+                class="btn btn-neutral"
+                onclick="document.getElementById('help').scrollIntoView()"
+              >
+                Learn More
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex mt-32">
+      <div class="m-auto">
+        <div class="stats stats-vertical lg:stats-horizontal shadow">
+          <div class="stat">
+            <div class="stat-title">Low App Fees</div>
+            <div class="stat-value">5-6%</div>
+            <div class="stat-desc">Keep more of your profits</div>
+          </div>
+
+          <div class="stat">
+            <div class="stat-title">Manage Payouts</div>
+            <div class="stat-value text-md">Initiate & view payouts</div>
+            <div class="stat-desc">See when your $ arrives</div>
+          </div>
+
+          <div class="stat">
+            <div class="stat-title">Intuitive Payment Processing</div>
+            <div class="stat-value text-md">Enhance your DX</div>
+            <div class="stat-desc">Simple payment integrations</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex justify-center mt-32" id="help">
+      <div
+        class="card border bg-base-200 border-white border-8 white lg:w-1/3 mt-5 mx-5 mb-10 shadow-xl shadow-neutral-600"
+        style="
+          border-color: rgb(242, 221, 110);
+          border-image-slice: 1;
+          border-image-source: linear-gradient(
+            90deg,
+            rgba(242, 221, 110, 1) 0%,
+            rgba(229, 178, 93, 1) 35%,
+            rgba(171, 143, 69, 1) 100%
+          );
+        "
+      >
+        <div
+          class="text-white flex flex-col gap-10 justify-center px-4 py-16 card-body"
+        >
+          <div class="m-auto">
+            <ul class="steps steps-vertical lg:steps-horizontal">
+              <li class="step step-warning">Register</li>
+              <li class="step step-warning">Create a payment link</li>
+              <li class="step">
+                Use our language specific libraries to integrate into your app
+              </li>
+              <li class="step">Get Paid</li>
+            </ul>
+          </div>
+
+          <div class="card-title justify-center">
+            <p class="text-center font-bold">
+              Easily integrate payments into your application
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hidden lg:block">
+      <div class="flex justify-center">
+        <div
+          class="card border bg-base-200 border-white border-8 white lg:w-1/2 mt-10 mx-5 mb-10 shadow-xl shadow-neutral-600"
+          style="
+            border-color: rgb(242, 221, 110);
+            border-image-slice: 1;
+            border-image-source: linear-gradient(
+              90deg,
+              rgba(242, 221, 110, 1) 0%,
+              rgba(229, 178, 93, 1) 35%,
+              rgba(171, 143, 69, 1) 100%
+            );
+          "
+        >
+          <div
+            class="text-white flex flex-col gap-10 justify-center px-4 py-16 card-body"
+          >
+            <div class="m-auto">
+              <div class="flex">
+                <div class="tabs m-auto mb-5" id="tabs">
+                  <button
+                    class="btn"
+                    style="background-color: #f2dd6e; color: white"
+                    onclick="document.getElementById('node-js').removeAttribute('hidden'); document.getElementById('golang').setAttribute('hidden', 'hidden'); document.getElementById('tabs').className = 'tabs m-auto mb-5'"
+                  >
+                    Node.js
+                  </button>
+                  <button
+                    class="btn"
+                    style="background-color: #f2dd6e; color: white"
+                    onclick="document.getElementById('golang').removeAttribute('hidden'); document.getElementById('node-js').setAttribute('hidden', 'hidden'); document.getElementById('tabs').className = 'tabs m-auto'"
+                  >
+                    Go
+                  </button>
+                </div>
+              </div>
+
+              <div class="mockup-code" id="node-js">
+                <pre><code>
+		const { Snail } = require("snail-api-wrapper");
+
+		const snail = new Snail("snail_ce5f651f-c523-4c78-9fbe-615b39bc086e")
+
+		// collect a verification code from your user
+
+		const payment = await snail.verifyPayment(code);
+
+		if (!payment) 
+			return // handle invalid verification code
+
+			// handle success
+		</code></pre>
+              </div>
+            </div>
+
+            <div class="mockup-code w-4/5 m-auto" id="golang" hidden="hidden">
+              <pre><code>
+	package main
+
+    import "github.com/ferretcode/snail-go-sdk"
+
+    func main() {
+      s := snail.NewSnail("snail_ce5f651f-c523-4c78-9fbe-615b39bc086e")
+
+      // collect a verification code from your user
+
+	  payment, err := s.VerifyPayment(code)
+
+      if err != nil {
+        log.Fatal(err)
+      }
+
+      // handle success
+    }		
+    </code></pre>
+            </div>
+
+            <div class="card-title justify-center">
+              <p class="text-center font-bold">Simple SDKs</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="lg:hidden sm:block">
+      <div
+        class="card border bg-base-200 border-white border-8 white lg:w-1/3 mt-5 mx-5 mb-10 shadow-xl shadow-neutral-600"
+        style="
+          border-color: rgb(242, 221, 110);
+          border-image-slice: 1;
+          border-image-source: linear-gradient(
+            90deg,
+            rgba(242, 221, 110, 1) 0%,
+            rgba(229, 178, 93, 1) 35%,
+            rgba(171, 143, 69, 1) 100%
+          );
+        "
+      >
+        <div
+          class="text-white flex flex-col gap-10 justify-center px-4 py-16 card-body"
+        >
+          <div class="card-title justify-center">
+            <p class="text-center font-bold">Simple SDKs</p>
+          </div>
+
+          <div class="m-auto">
+            <button style="background-color: #f2dd6e; color: white" class="btn">
+              <a href="https://npmjs.com/snail-api-wrapper">Node.js SDK</a>
+            </button>
+            <button style="background-color: #f2dd6e; color: white" class="btn">
+              <a href="https://github.com/ferretcode/snail-go-sdk"
+                >Golang SDK</a
+              >
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

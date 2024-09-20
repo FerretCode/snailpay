@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Snail - Payment Integrations</title>
+    <link rel="icon" href="./favicon.ico" type="image/x-icon" />
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/daisyui@3.2.1/dist/full.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto+Condensed&family=Victor+Mono&display=swap"
+      rel="stylesheet"
+    />
+
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body style="font-family: 'Roboto Condensed'">
+    <div
+      class="navbar text-primary-content"
+      style="
+        background: rgb(242, 221, 110);
+        background: linear-gradient(
+          90deg,
+          rgba(242, 221, 110, 1) 0%,
+          rgba(229, 178, 93, 1) 35%,
+          rgba(82, 58, 52, 1) 100%
+        );
+      "
+    >
+      <div class="flex-1">
+        <a class="btn btn-ghost normal-case text-xl" href="/">Home</a>
+      </div>
+      <div class="flex-none">
+        <ul class="menu menu-horizontal px-1">
+          <li><a href="/dashboard/home" class="font-bold">Dashboard</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const submitButton = document.getElementById("submit-button");
+
+        submitButton.addEventListener("click", async (e) => {
+          e.preventDefault();
+
+          submitButton.setAttribute("disabled", "disabled");
+
+          const name = document.getElementById("name").value;
+          const email = document.getElementById("email").value;
+          const countryCode = document.getElementById("country-code").value;
+          const routingNumber = document.getElementById("routing-number").value;
+          const accountNumber = document.getElementById("account-number").value;
+
+          const emailValidator = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g;
+          const nameValidator = /^[a-z ,.'-]+$/i;
+
+          if (!emailValidator.test(email))
+            alert("Please enter a valid email address!");
+
+          if (!nameValidator.test(name)) alert("Please enter a valid name!");
+
+          const res = await fetch("/api/onboarding", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Access-Control-Allow-Origin": "*",
+            },
+            body: JSON.stringify({
+              name,
+              email,
+              routing_number: routingNumber,
+              account_number: accountNumber,
+              country_code: countryCode,
+            }),
+          });
+
+          if (res.status !== 200) {
+            alert("There was an issue onboarding you!");
+
+            return;
+          }
+
+          const url = await res.text();
+
+          window.location.href = url;
+        });
+      });
+    </script>
+
+    <div class="flex min-h-screen">
+      <div class="m-auto">
+        <ul class="steps steps-lg steps-vertical">
+          <li class="step">
+            <input
+              id="name"
+              type="text"
+              placeholder="Your Full Name"
+              class="input input-bordered input-md w-full max-w-xs"
+            />
+          </li>
+          <li class="step">
+            <input
+              id="email"
+              type="email"
+              placeholder="Your Email"
+              class="input input-bordered input-md w-full max-w-xs"
+            />
+          </li>
+          <li class="step">
+            <select
+              id="country-code"
+              class="select select-bordered w-full max-w-xs"
+            >
+              <option disabled selected>Country Code</option>
+              <option>US</option>
+            </select>
+          </li>
+          <li class="step">
+            <input
+              id="routing-number"
+              type="password"
+              placeholder="Your Bank Account Routing Number"
+              class="input input-bordered input-md w-full max-w-xs"
+            />
+          </li>
+          <li class="step">
+            <input
+              id="account-number"
+              type="password"
+              placeholder="Your Bank Account Number"
+              class="input input-bordered input-md w-full max-w-xs"
+            />
+          </li>
+          <li class="step">
+            <button
+              id="submit-button"
+              style="background-color: #f2dd6e; color: white"
+              class="btn"
+            >
+              Start Onboarding
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </body>
+</html>

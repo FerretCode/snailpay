@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Snail - Payment Integrations</title>
+    <link rel="icon" href="./favicon.ico" type="image/x-icon" />
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/daisyui@3.2.1/dist/full.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto+Condensed&family=Victor+Mono&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body style="font-family: 'Roboto Condensed'">
+    <div
+      class="navbar text-primary-content"
+      style="
+        background: rgb(242, 221, 110);
+        background: linear-gradient(
+          90deg,
+          rgba(242, 221, 110, 1) 0%,
+          rgba(229, 178, 93, 1) 35%,
+          rgba(82, 58, 52, 1) 100%
+        );
+      "
+    >
+      <div class="flex-1">
+        <a class="btn btn-ghost normal-case text-xl" href="/">Home</a>
+      </div>
+      <div class="flex-none">
+        <ul class="menu menu-horizontal px-1">
+          <li><a href="/dashboard/home" class="font-bold">Dashboard</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <button
+      style="background-color: #f2dd6e; color: white"
+      id="stripe-payments"
+      class="btn mt-5 ml-5"
+    >
+      <a href="/dashboard/home"> Back to Dashboard</a>
+    </button>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const deleteButton = document.getElementById("delete-button");
+
+        deleteButton.addEventListener("click", async (e) => {
+          e.preventDefault();
+
+          const checkboxes = document.querySelectorAll(
+            "input[type='checkbox']"
+          );
+
+          let selected = [];
+
+          for (const checkbox of checkboxes) {
+            selected.push(checkbox);
+          }
+
+          selected = selected.filter((checkbox) => checkbox.checked);
+
+          const res = await fetch("/api/delete-payment-link", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              payment_links: selected.map((checkbox) => checkbox.id),
+            }),
+          });
+
+          if (res.status !== 200)
+            return alert(
+              "There was an issue deleting the selected payment links!"
+            );
+
+          location.reload();
+        });
+      });
+    </script>
+
+    <div class="flex">
+      <div class="m-auto">
+        <div class="overflow-x-auto mt-6 border-4 border-amber-400">
+          <table class="table">
+            <!-- head -->
+            <thead>
+              <tr>
+                <th>
+                  <label>
+                    <input type="checkbox" class="checkbox" />
+                  </label>
+                </th>
+                <th>Product Name</th>
+                <th>ID</th>
+                <th>URL</th>
+              </tr>
+            </thead>
+            <tbody>
+              {{range .PaymentLinkList}}
+              <tr>
+                <th>
+                  <label>
+                    <input id="{{.ID}}" type="checkbox" class="checkbox" />
+                  </label>
+                </th>
+                <td>
+                  <div class="flex items-center space-x-3">
+                    <div class="font-bold">{{.ProductName}}</div>
+                  </div>
+                </td>
+                <td>{{.ID}}</td>
+                <td>
+                  <a href="https://snailpay.app/{{.ID}}"
+                    >https://snailpay.app/{{.ID}}</a
+                  >
+                  <br />
+                </td>
+              </tr>
+              {{end}}
+            </tbody>
+          </table>
+        </div>
+
+        <button class="btn btn-error mt-6" id="delete-button">
+          Delete Selected
+        </button>
+      </div>
+    </div>
+  </body>
+</html>

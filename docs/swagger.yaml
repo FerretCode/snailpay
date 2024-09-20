@@ -1,0 +1,41 @@
+basePath: /api
+consumes:
+- application/json
+- application/json
+- application/json
+- application/json
+- application/json
+- application/json
+- application/json
+- application/json
+- application/json
+- application/json
+- application/json
+- application/json
+info:
+  contact: {}
+  description: Create a new subscription link
+  title: Subscription Link
+  version: "1.0"
+paths: {}
+produces:
+- application/json
+- application/json
+- application/json
+- application/json
+- application/json
+- application/json
+- application/json
+- application/json
+- application/json
+- application/json
+- application/json
+- application/json
+schemes:
+- https
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: X-API-Key
+    type: apiKey
+swagger: "2.0"
